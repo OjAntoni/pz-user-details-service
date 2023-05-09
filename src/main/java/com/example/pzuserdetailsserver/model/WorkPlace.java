@@ -17,5 +17,4 @@ public class WorkPlace {
     private long id;
     private String faculty;
     private String specialization;
-    private LocalDate from;
 }

@@ -25,7 +25,7 @@ public class User {
     private String surname;
     private String username;
     private String email;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private WorkPlace workPlace;
     private URL urlToImage;
 
