@@ -82,4 +82,9 @@ public class UserResource {
     public ResponseEntity<List<User>> getUsers(@RequestParam int page, @RequestParam int size){
         return new ResponseEntity<>(userService.getAll(page, size), HttpStatus.OK);
     }
+
+    @GetMapping("/deleted")
+    public ResponseEntity<User> getDefaultDeletedUser(){
+        return new ResponseEntity<>(userService.getDefaultDeletedUser(), HttpStatus.OK);
+    }
 }
