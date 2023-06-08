@@ -75,7 +75,7 @@ public class UserResource {
     @DeleteMapping("{uuid}")
     public ResponseEntity<?> deleteUser(@PathVariable UUID uuid){
         userService.delete(uuid);
-        return new ResponseEntity<>(HttpStatus.GONE);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/all")
