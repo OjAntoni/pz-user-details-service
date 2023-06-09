@@ -82,4 +82,12 @@ public class UserService {
     public User getDefaultDeletedUser() {
         return userRepository.findByUsernameAndEmail("DELETED", "");
     }
+
+    public boolean existsByUsername(String username){
+        return userRepository.findByUsername(username) != null;
+    }
+
+    public User getUser(String username){
+        return userRepository.findByUsername(username);
+    }
 }

@@ -31,11 +31,15 @@ public class UserResource {
     @PostMapping
     @SneakyThrows
     public ResponseEntity<?> createNewUser(@Valid @RequestBody UserRegistrationDTO dto, BindingResult result){
+        HashMap<String, String> map = new HashMap<>();
         if (result.hasErrors()) {
-            HashMap<String, String> map = new HashMap<>();
             result.getFieldErrors().forEach(e -> map.put(e.getField(), e.getDefaultMessage()));
-            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
+        if (userService.existsByUsername(dto.getUsername())) {
+            map.put("username", "user with such username already exists");
+        }
+        if (!map.isEmpty()) return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+
         ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("location", userService.save(userMapper.toEntity(dto)).toString());
         return new ResponseEntity<>(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(objectNode), HttpStatus.OK);
@@ -46,6 +50,16 @@ public class UserResource {
         User byUUID = userService.getByUUID(uuid);
         if (byUUID!=null) {
             return new ResponseEntity<>(byUUID, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/by_username")
+    public ResponseEntity<?> getUserByUsername(@RequestParam String username){
+        User u = userService.getUser(username);
+        if (u!=null) {
+            return new ResponseEntity<>(u, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
