@@ -52,7 +52,6 @@ public class UserService {
                             .description(t.getDescription())
                             .build());
         });
-        userRepository.deleteById(id);
 
         List<ArticleResponseDTO> articles = articleServiceFeignClient.getAllArticlesForUser(id);
         articles.forEach(a -> {
@@ -68,6 +67,8 @@ public class UserService {
                             .build()
                     );
         });
+
+        userRepository.deleteById(id);
 
     }
 

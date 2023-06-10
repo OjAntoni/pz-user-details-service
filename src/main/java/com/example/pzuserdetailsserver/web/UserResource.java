@@ -2,6 +2,7 @@ package com.example.pzuserdetailsserver.web;
 
 import com.example.pzuserdetailsserver.model.User;
 import com.example.pzuserdetailsserver.service.UserService;
+import com.example.pzuserdetailsserver.web.dto.NewUserLocationResp;
 import com.example.pzuserdetailsserver.web.dto.PatchUserDto;
 import com.example.pzuserdetailsserver.web.dto.UserRegistrationDTO;
 import com.example.pzuserdetailsserver.web.mapper.UserMapper;
@@ -29,7 +30,7 @@ public class UserResource {
     private ObjectMapper objectMapper;
 
     @PostMapping
-    @SneakyThrows
+
     public ResponseEntity<?> createNewUser(@Valid @RequestBody UserRegistrationDTO dto, BindingResult result){
         HashMap<String, String> map = new HashMap<>();
         if (result.hasErrors()) {
@@ -39,10 +40,7 @@ public class UserResource {
             map.put("username", "user with such username already exists");
         }
         if (!map.isEmpty()) return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
-
-        ObjectNode objectNode = objectMapper.createObjectNode();
-        objectNode.put("location", userService.save(userMapper.toEntity(dto)).toString());
-        return new ResponseEntity<>(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(objectNode), HttpStatus.OK);
+        return new ResponseEntity<>(new NewUserLocationResp(userService.save(userMapper.toEntity(dto))), HttpStatus.OK);
     }
 
     @GetMapping("{uuid}")
@@ -65,7 +63,7 @@ public class UserResource {
         }
     }
 
-    @PatchMapping("{uuid}")
+    @PutMapping("{uuid}")
     public ResponseEntity<?> updateUser(@PathVariable UUID uuid,
                                         @RequestBody @Valid PatchUserDto dto,
                                         BindingResult result){
